@@ -52,14 +52,14 @@
     "rollup": "^4.61.1",
     "ts-jest": "^29.1.1",
     "typescript": "^5.2.2",
-    "vue": "^3.2.37"
+    "vue": "^3.5.13"
   },
   "dependencies": {
     "embla-carousel": "9.0.0-rc02",
     "embla-carousel-reactive-utils": "9.0.0-rc02"
   },
   "peerDependencies": {
-    "vue": "^3.2.37"
+    "vue": "^3.3.0"
   },
   "exports": {
     "./package.json": "./package.json",

@@ -1,4 +1,12 @@
-import { Ref, MaybeRef, isRef, watch, onBeforeUnmount, shallowRef } from 'vue'
+import {
+  Ref,
+  MaybeRefOrGetter,
+  isRef,
+  toValue,
+  watch,
+  onBeforeUnmount,
+  shallowRef
+} from 'vue'
 import { areOptionsEqual, arePluginsEqual } from 'embla-carousel-reactive-utils'
 import EmblaCarousel, {
   EmblaCarouselType,
@@ -13,16 +21,16 @@ export type UseEmblaCarouselType = [
 ]
 
 function useEmblaCarousel(
-  options: MaybeRef<EmblaOptionsType> = {},
-  plugins: MaybeRef<EmblaPluginType[]> = []
+  options: MaybeRefOrGetter<EmblaOptionsType> = {},
+  plugins: MaybeRefOrGetter<EmblaPluginType[]> = []
 ): UseEmblaCarouselType {
   EmblaCarousel.globalOptions = useEmblaCarousel.globalOptions
 
-  const isRefOptions = isRef(options)
-  const isRefPlugins = isRef(plugins)
+  const isReactiveOptions = isRef(options) || typeof options === 'function'
+  const isReactivePlugins = isRef(plugins) || typeof plugins === 'function'
 
-  let storedOptions = isRefOptions ? options.value : options
-  let storedPlugins = isRefPlugins ? plugins.value : plugins
+  let storedOptions = toValue(options)
+  let storedPlugins = toValue(plugins)
 
   const serverApi = EmblaCarousel(null, storedOptions, storedPlugins)
   const clientApi = shallowRef<EmblaCarouselType>()
@@ -53,7 +61,7 @@ function useEmblaCarousel(
     if (clientApi.value) clientApi.value.destroy()
   })
 
-  if (isRefOptions) {
+  if (isReactiveOptions) {
     watch(options, (newOptions) => {
       if (areOptionsEqual(storedOptions, newOptions)) return
       storedOptions = newOptions
@@ -61,7 +69,7 @@ function useEmblaCarousel(
     })
   }
 
-  if (isRefPlugins) {
+  if (isReactivePlugins) {
     watch(plugins, (newPlugins) => {
       if (arePluginsEqual(storedPlugins, newPlugins)) return
       storedPlugins = newPlugins

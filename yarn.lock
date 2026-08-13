@@ -6782,9 +6782,9 @@ __metadata:
     rollup: ^4.61.1
     ts-jest: ^29.1.1
     typescript: ^5.2.2
-    vue: ^3.2.37
+    vue: ^3.5.13
   peerDependencies:
-    vue: ^3.2.37
+    vue: ^3.3.0
   languageName: unknown
   linkType: soft
 
@@ -16030,7 +16030,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vue@npm:^3.2.37, vue@npm:^3.5.13":
+"vue@npm:^3.5.13":
   version: 3.5.27
   resolution: "vue@npm:3.5.27"
   dependencies:
