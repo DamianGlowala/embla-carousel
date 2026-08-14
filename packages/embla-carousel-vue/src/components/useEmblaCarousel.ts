@@ -21,13 +21,13 @@ export type UseEmblaCarouselType = [
 ]
 
 function useEmblaCarousel(
-  options: MaybeRefOrGetter<EmblaOptionsType> = {},
-  plugins: MaybeRefOrGetter<EmblaPluginType[]> = []
+  options?: MaybeRefOrGetter<EmblaOptionsType | undefined>,
+  plugins?: MaybeRefOrGetter<EmblaPluginType[] | undefined>
 ): UseEmblaCarouselType {
   EmblaCarousel.globalOptions = useEmblaCarousel.globalOptions
 
-  let storedOptions = toValue(options)
-  let storedPlugins = toValue(plugins)
+  let storedOptions = toValue(options) ?? {}
+  let storedPlugins = toValue(plugins) ?? []
 
   const serverApi = EmblaCarousel(null, storedOptions, storedPlugins)
   const clientApi = shallowRef<EmblaCarouselType>()
@@ -60,6 +60,7 @@ function useEmblaCarousel(
 
   if (isWatchSource(options)) {
     watch(options, (newOptions) => {
+      newOptions ??= {}
       if (areOptionsEqual(storedOptions, newOptions)) return
       storedOptions = newOptions
       reInit()
@@ -68,6 +69,7 @@ function useEmblaCarousel(
 
   if (isWatchSource(plugins)) {
     watch(plugins, (newPlugins) => {
+      newPlugins ??= []
       if (arePluginsEqual(storedPlugins, newPlugins)) return
       storedPlugins = newPlugins
       reInit()
