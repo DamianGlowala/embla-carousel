@@ -1,7 +1,6 @@
 import {
   Ref,
   MaybeRefOrGetter,
-  isRef,
   toValue,
   watch,
   onBeforeUnmount,
@@ -13,6 +12,7 @@ import EmblaCarousel, {
   EmblaOptionsType,
   EmblaPluginType
 } from 'embla-carousel'
+import { isWatchSource } from './utils'
 
 export type UseEmblaCarouselType = [
   Ref<HTMLElement | undefined>,
@@ -25,9 +25,6 @@ function useEmblaCarousel(
   plugins: MaybeRefOrGetter<EmblaPluginType[]> = []
 ): UseEmblaCarouselType {
   EmblaCarousel.globalOptions = useEmblaCarousel.globalOptions
-
-  const isReactiveOptions = isRef(options) || typeof options === 'function'
-  const isReactivePlugins = isRef(plugins) || typeof plugins === 'function'
 
   let storedOptions = toValue(options)
   let storedPlugins = toValue(plugins)
@@ -61,7 +58,7 @@ function useEmblaCarousel(
     if (clientApi.value) clientApi.value.destroy()
   })
 
-  if (isReactiveOptions) {
+  if (isWatchSource(options)) {
     watch(options, (newOptions) => {
       if (areOptionsEqual(storedOptions, newOptions)) return
       storedOptions = newOptions
@@ -69,7 +66,7 @@ function useEmblaCarousel(
     })
   }
 
-  if (isReactivePlugins) {
+  if (isWatchSource(plugins)) {
     watch(plugins, (newPlugins) => {
       if (arePluginsEqual(storedPlugins, newPlugins)) return
       storedPlugins = newPlugins
